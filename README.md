@@ -1,2 +1,2 @@
 # NotesManager
-A (really simple) script that helps me organize my university notes
+A (really simple) GoLang program that helps me organize my university notes
