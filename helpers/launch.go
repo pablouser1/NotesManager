@@ -23,16 +23,18 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	path := parentPath + "/" + strconv.FormatInt(unit.Num, 10) + editorFormat
 	// Workaround: If editor is rnote copy the template
 	if editor == "rnote" {
-		bytesRead, err := os.ReadFile("./data/template.rnote")
-		if err != nil {
-			fmt.Println("Error reading template", err)
-			return
-		}
+		if _, err := os.Stat(path); err != nil {
+			bytesRead, err := os.ReadFile("./data/template.rnote")
+			if err != nil {
+				fmt.Println("Error reading template", err)
+				return
+			}
 
-		err = os.WriteFile(path, bytesRead, 0644)
-		if err != nil {
-			fmt.Println("Error writing template", err)
-			return
+			err = os.WriteFile(path, bytesRead, 0644)
+			if err != nil {
+				fmt.Println("Error writing template", err)
+				return
+			}
 		}
 	}
 
