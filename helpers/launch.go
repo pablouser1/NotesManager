@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -17,14 +18,14 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	editorPath := editors.PATHS[editor]
 	editorFormat := editors.FORMATS[editor]
 
-	parentPath := docsPath + "/" + subject.Slug
+	parentPath := filepath.Join(docsPath, subject.Slug)
 	os.MkdirAll(parentPath, 0644)
 
-	path := parentPath + "/" + strconv.FormatInt(unit.Num, 10) + editorFormat
+	path := filepath.Join(parentPath, strconv.FormatInt(unit.Num, 10)+editorFormat)
 	// Workaround: If editor is rnote copy the template
 	if editor == "rnote" {
 		if _, err := os.Stat(path); err != nil {
-			bytesRead, err := os.ReadFile("./data/template.rnote")
+			bytesRead, err := os.ReadFile(filepath.Join("data", "template.rnote"))
 			if err != nil {
 				fmt.Println("Error reading template", err)
 				return

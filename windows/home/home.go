@@ -29,6 +29,9 @@ func getIndexesFromUnits(units []models.Unit) []int {
 func Open(myApp fyne.App) {
 	mainWindow = myApp.NewWindow("Notes Manager")
 	mainWindow.Resize(fyne.NewSize(600, 400))
+	mainWindow.SetCloseIntercept(func() {
+		mainWindow.Hide()
+	})
 
 	// Picked subject
 	var subject models.Subject

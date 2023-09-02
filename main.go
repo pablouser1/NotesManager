@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -19,7 +20,7 @@ func main() {
 	// Create default path for docs and write initial config
 	docsPath := helpers.GetDocs(myApp)
 	if docsPath == "" {
-		err := os.MkdirAll(configPath+"/docs", 0755)
+		err := os.MkdirAll(filepath.Join(configPath, "docs"), 0755)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -36,9 +37,7 @@ func main() {
 	// System tray
 	if desk, ok := myApp.(desktop.App); ok {
 		m := fyne.NewMenu("Notes Manager",
-			fyne.NewMenuItem("Show", func() {
-				home.Show()
-			}),
+			fyne.NewMenuItem("Show", home.Show),
 		)
 		desk.SetSystemTrayMenu(m)
 	}
