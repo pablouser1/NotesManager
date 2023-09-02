@@ -6,12 +6,13 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/pablouser1/NotesManager/constants/editors"
+	"github.com/pablouser1/NotesManager/constants/ui"
 	"github.com/pablouser1/NotesManager/helpers"
 )
 
 func Open(myApp fyne.App) {
 	settingsWindow := myApp.NewWindow("Settings")
-	settingsWindow.Resize(fyne.NewSize(300, 200))
+	settingsWindow.Resize(ui.MISC_WIN_SIZE)
 	entry := widget.NewEntry()
 
 	// Build file opener

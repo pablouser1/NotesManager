@@ -20,12 +20,13 @@ func main() {
 	// Create default path for docs and write initial config
 	docsPath := helpers.GetDocs(myApp)
 	if docsPath == "" {
-		err := os.MkdirAll(filepath.Join(configPath, "docs"), 0755)
+		defaultPath := filepath.Join(configPath, "docs")
+		err := os.MkdirAll(defaultPath, 0755)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		helpers.SetDocs(myApp, docsPath)
+		helpers.SetDocs(myApp, defaultPath)
 	}
 
 	// Set default editor if empty

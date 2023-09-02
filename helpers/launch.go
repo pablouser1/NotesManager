@@ -19,7 +19,7 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	editorFormat := editors.FORMATS[editor]
 
 	parentPath := filepath.Join(docsPath, subject.Slug)
-	os.MkdirAll(parentPath, 0644)
+	os.MkdirAll(parentPath, 0755)
 
 	path := filepath.Join(parentPath, strconv.FormatInt(unit.Num, 10)+editorFormat)
 	// Workaround: If editor is rnote copy the template
@@ -31,7 +31,7 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 				return
 			}
 
-			err = os.WriteFile(path, bytesRead, 0644)
+			err = os.WriteFile(path, bytesRead, 0755)
 			if err != nil {
 				fmt.Println("Error writing template", err)
 				return

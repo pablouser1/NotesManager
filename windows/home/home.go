@@ -8,10 +8,12 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/pablouser1/NotesManager/constants/ui"
 	"github.com/pablouser1/NotesManager/db"
 	"github.com/pablouser1/NotesManager/helpers"
 	"github.com/pablouser1/NotesManager/models"
-	"github.com/pablouser1/NotesManager/windows/item"
+	"github.com/pablouser1/NotesManager/windows/newsub"
+	"github.com/pablouser1/NotesManager/windows/newunit"
 	"github.com/pablouser1/NotesManager/windows/settings"
 )
 
@@ -28,7 +30,7 @@ func getIndexesFromUnits(units []models.Unit) []int {
 
 func Open(myApp fyne.App) {
 	mainWindow = myApp.NewWindow("Notes Manager")
-	mainWindow.Resize(fyne.NewSize(600, 400))
+	mainWindow.Resize(ui.MAIN_WIN_SIZE)
 	mainWindow.SetCloseIntercept(func() {
 		mainWindow.Hide()
 	})
@@ -56,9 +58,13 @@ func Open(myApp fyne.App) {
 
 	// Build toolbar
 	toolbar := widget.NewToolbar(
-		// New item
+		// New subject
 		widget.NewToolbarAction(theme.FolderNewIcon(), func() {
-			item.Open(myApp)
+			newsub.Open(myApp)
+		}),
+		// New Unit
+		widget.NewToolbarAction(theme.FileIcon(), func() {
+			newunit.Open(myApp, subject)
 		}),
 		widget.NewToolbarSpacer(),
 		// Settings

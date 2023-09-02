@@ -1,6 +1,31 @@
 package db
 
-import "github.com/pablouser1/NotesManager/models"
+import (
+	"fmt"
+
+	"github.com/pablouser1/NotesManager/models"
+)
+
+func AddUnit(num int64, name string, subjectId int64) (models.Unit, error) {
+	res, err := conn.Exec("INSERT INTO units (num, name, subject_id) VALUES (?, ?, ?)", num, name, subjectId)
+	if err != nil {
+		return models.Unit{}, fmt.Errorf("AddUnit: %v", err)
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return models.Unit{}, err
+	}
+
+	unit := models.Unit{
+		ID:        id,
+		Num:       num,
+		Name:      name,
+		SubjectId: subjectId,
+	}
+
+	return unit, nil
+}
 
 func GetUnits(id int64) ([]models.Unit, error) {
 	rows, err := conn.Query("SELECT id, num, name, subject_id FROM units WHERE subject_id=?", id)
