@@ -26,11 +26,6 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	// Workaround: If editor is rnote copy the template
 	if editor == "rnote" {
 		if _, err := os.Stat(path); err != nil {
-			if err != nil {
-				fmt.Println("Error reading template", err)
-				return
-			}
-
 			err = os.WriteFile(path, files.RNOTE_TEMPLATE, files.DATA_PERMS)
 			if err != nil {
 				fmt.Println("Error writing template", err)
