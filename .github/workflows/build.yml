@@ -1,0 +1,41 @@
+name: Build version
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '^1.21.0'
+          cache-dependency-path: "**/*.sum"
+      - name: Install fyne tools
+        run: go install fyne.io/fyne/v2/cmd/fyne@latest
+      - id: version
+        name: Get version
+        uses: SebRollen/toml-action@v1.0.2
+        with:
+          file: 'FyneApp.toml'
+          field: 'Details.Version'
+      - id: build
+        name: Get build
+        uses: SebRollen/toml-action@v1.0.2
+        with:
+          file: 'FyneApp.toml'
+          field: 'Details.Build'
+      - name: Build app
+        run: fyne release
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./NotesManager.tar.xz"
+          artifactContentType: application/x-gtar
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.version.outputs.value }}-${{steps.build.outputs.value}}
+          allowUpdates: true
