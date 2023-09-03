@@ -28,7 +28,7 @@ func AddUnit(num int64, name string, subjectId int64) (models.Unit, error) {
 }
 
 func GetUnits(id int64) ([]models.Unit, error) {
-	rows, err := conn.Query("SELECT id, num, name, subject_id FROM units WHERE subject_id=?", id)
+	rows, err := conn.Query("SELECT id, num, name, subject_id FROM units WHERE subject_id=? ORDER BY num ASC", id)
 	if err != nil {
 		return nil, err
 	}
@@ -45,5 +45,6 @@ func GetUnits(id int64) ([]models.Unit, error) {
 	if err = rows.Err(); err != nil {
 		return units, err
 	}
+
 	return units, nil
 }

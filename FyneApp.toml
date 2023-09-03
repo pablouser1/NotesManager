@@ -1,0 +1,8 @@
+Website = "https://github.com/pablouser1/NotesManager"
+
+[Details]
+  Icon = "Icon.png"
+  Name = "NotesManager"
+  ID = "es.pablouser1.notesmanager"
+  Version = "1.0.0"
+  Build = 1

@@ -1,1 +1,7 @@
-/NotesManager
+NotesManager
+NotesManager.tar.xz
+tmp-pkg
+fyne_metadata_init.go
+
+# Cross compilation
+fyne-cross

@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/driver/desktop"
+	"github.com/pablouser1/NotesManager/constants/files"
 	"github.com/pablouser1/NotesManager/db"
 	"github.com/pablouser1/NotesManager/helpers"
 	"github.com/pablouser1/NotesManager/windows/home"
@@ -21,7 +22,7 @@ func main() {
 	docsPath := helpers.GetDocs(myApp)
 	if docsPath == "" {
 		defaultPath := filepath.Join(configPath, "docs")
-		err := os.MkdirAll(defaultPath, 0755)
+		err := os.MkdirAll(defaultPath, files.DATA_PERMS)
 		if err != nil {
 			fmt.Println(err)
 			return

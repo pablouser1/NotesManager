@@ -6,6 +6,7 @@ require (
 	fyne.io/fyne/v2 v2.3.5
 	github.com/gosimple/slug v1.13.1
 	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/studio-b12/gowebdav v0.9.0
 )
 
 require (

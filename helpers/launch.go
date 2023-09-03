@@ -9,6 +9,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"github.com/pablouser1/NotesManager/constants/editors"
+	"github.com/pablouser1/NotesManager/constants/files"
 	"github.com/pablouser1/NotesManager/models"
 )
 
@@ -19,7 +20,7 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	editorFormat := editors.FORMATS[editor]
 
 	parentPath := filepath.Join(docsPath, subject.Slug)
-	os.MkdirAll(parentPath, 0755)
+	os.MkdirAll(parentPath, files.DATA_PERMS)
 
 	path := filepath.Join(parentPath, strconv.FormatInt(unit.Num, 10)+editorFormat)
 	// Workaround: If editor is rnote copy the template
@@ -31,7 +32,7 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 				return
 			}
 
-			err = os.WriteFile(path, bytesRead, 0755)
+			err = os.WriteFile(path, bytesRead, files.DATA_PERMS)
 			if err != nil {
 				fmt.Println("Error writing template", err)
 				return

@@ -63,7 +63,7 @@ func Open(myApp fyne.App) {
 			newsub.Open(myApp)
 		}),
 		// New Unit
-		widget.NewToolbarAction(theme.FileIcon(), func() {
+		widget.NewToolbarAction(theme.DocumentCreateIcon(), func() {
 			newunit.Open(myApp, subject)
 		}),
 		widget.NewToolbarSpacer(),
