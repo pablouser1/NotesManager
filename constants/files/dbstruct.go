@@ -1,3 +1,6 @@
+package files
+
+const DB_STRUCT string = `
 -- subjects definition
 CREATE TABLE subjects (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,3 +17,4 @@ CREATE TABLE units (
 	subject_id INTEGER,
 	CONSTRAINT units_FK FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
+`

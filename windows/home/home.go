@@ -44,7 +44,12 @@ func Open(myApp fyne.App) {
 		fmt.Println(err)
 		return
 	}
-	subject = subjects[0] // Set default selected subject
+
+	// Set default selected subject
+	subject = models.Subject{}
+	if len(subjects) > 0 {
+		subject = subjects[0]
+	}
 
 	// Get default units
 	units, err := db.GetUnits(subject.ID)
