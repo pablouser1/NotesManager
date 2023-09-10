@@ -41,7 +41,7 @@ func Open(myApp fyne.App) {
 	// Get subjects
 	subjects, err := db.GetSubjects()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("GetSubjects:", err)
 		return
 	}
 
@@ -107,6 +107,10 @@ func Open(myApp fyne.App) {
 			o.(*widget.Button).OnTapped = func() {
 				subject = subjects[i]
 				units, err = db.GetUnits(subject.ID)
+				if err != nil {
+					fmt.Println("GetUnits:", err)
+					return
+				}
 				unitsIndxs.Set(getIndexesFromList(units))
 			}
 		},
