@@ -19,9 +19,9 @@ import (
 
 var mainWindow fyne.Window
 
-func getIndexesFromUnits(units []models.Unit) []int {
+func getIndexesFromList[T any](arr []T) []int {
 	var res []int
-	for i := range units {
+	for i := range arr {
 		res = append(res, i)
 	}
 
@@ -59,17 +59,33 @@ func Open(myApp fyne.App) {
 	}
 
 	unitsIndxs := binding.NewIntList()
-	unitsIndxs.Set(getIndexesFromUnits(units))
+	unitsIndxs.Set(getIndexesFromList(units))
+
+	// Channels
+	subjectChan := make(chan models.Subject)
+	unitChan := make(chan models.Unit)
 
 	// Build toolbar
 	toolbar := widget.NewToolbar(
 		// New subject
 		widget.NewToolbarAction(theme.FolderNewIcon(), func() {
-			newsub.Open(myApp)
+			newsub.Open(myApp, subjectChan)
+			newSub := <-subjectChan // Wait for a sub
+			// Append if not empty
+			if newSub != (models.Subject{}) {
+				subjects = append(subjects, newSub)
+				unitsIndxs.Set(getIndexesFromList(subjects))
+			}
 		}),
 		// New Unit
 		widget.NewToolbarAction(theme.DocumentCreateIcon(), func() {
-			newunit.Open(myApp, subject)
+			newunit.Open(myApp, subject, unitChan)
+			newUnit := <-unitChan // Wait for a unit
+			// Append if not empty
+			if newUnit != (models.Unit{}) {
+				units = append(units, newUnit)
+				unitsIndxs.Set(getIndexesFromList(units))
+			}
 		}),
 		widget.NewToolbarSpacer(),
 		// Settings
@@ -89,9 +105,9 @@ func Open(myApp fyne.App) {
 		func(i widget.ListItemID, o fyne.CanvasObject) {
 			o.(*widget.Button).SetText(subjects[i].Name)
 			o.(*widget.Button).OnTapped = func() {
-				units, err = db.GetUnits(subjects[i].ID)
 				subject = subjects[i]
-				unitsIndxs.Set(getIndexesFromUnits(units))
+				units, err = db.GetUnits(subject.ID)
+				unitsIndxs.Set(getIndexesFromList(units))
 			}
 		},
 	)
@@ -116,7 +132,7 @@ func Open(myApp fyne.App) {
 	input := widget.NewEntry()
 	input.SetPlaceHolder("Search")
 
-	content := container.NewBorder(toolbar, nil, nil, nil, container.NewHSplit(listSubjects, listUnits))
+	content := container.NewBorder(toolbar, input, nil, nil, container.NewHSplit(listSubjects, listUnits))
 	mainWindow.SetContent(content)
 	mainWindow.Show()
 }

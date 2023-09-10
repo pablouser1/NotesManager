@@ -11,9 +11,14 @@ import (
 	"github.com/pablouser1/NotesManager/models"
 )
 
-func Open(myApp fyne.App, subject models.Subject) {
+func Open(myApp fyne.App, subject models.Subject, channel chan models.Unit) {
 	itemWindow := myApp.NewWindow("New Unit")
 	itemWindow.Resize(ui.MISC_WIN_SIZE)
+
+	itemWindow.SetCloseIntercept(func() {
+		channel <- models.Unit{}
+		itemWindow.Close()
+	})
 
 	// Build form
 	num := widget.NewEntry()
@@ -39,15 +44,20 @@ func Open(myApp fyne.App, subject models.Subject) {
 		},
 		OnSubmit: func() {
 			fmt.Println("Form submitted:", num.Text, name.Text, subjectEntry.Text)
-			realNum, err := strconv.Atoi(num.Text)
+			realNumInt, err := strconv.Atoi(num.Text)
 			if err != nil {
 				fmt.Println("Error sending form", err)
 			}
 
-			_, err = db.AddUnit(int64(realNum), name.Text, subject.ID)
+			realNum := int64(realNumInt)
+
+			unit, err := db.AddUnit(realNum, name.Text, subject.ID)
 			if err != nil {
 				fmt.Println("Error writing unit to db", err)
 			}
+
+			channel <- unit
+
 			itemWindow.Close()
 		},
 	}
