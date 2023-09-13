@@ -58,6 +58,8 @@ func Open(myApp fyne.App) {
 		return
 	}
 
+	subjectsIndxs := binding.NewIntList()
+	subjectsIndxs.Set(getIndexesFromList(subjects))
 	unitsIndxs := binding.NewIntList()
 	unitsIndxs.Set(getIndexesFromList(units))
 
@@ -74,7 +76,7 @@ func Open(myApp fyne.App) {
 			// Append if not empty
 			if newSub != (models.Subject{}) {
 				subjects = append(subjects, newSub)
-				unitsIndxs.Set(getIndexesFromList(subjects))
+				subjectsIndxs.Set(getIndexesFromList(subjects))
 			}
 		}),
 		// New Unit
@@ -95,17 +97,16 @@ func Open(myApp fyne.App) {
 	)
 
 	// Build list of subjects
-	listSubjects := widget.NewList(
-		func() int {
-			return len(subjects)
-		},
+	listSubjects := widget.NewListWithData(subjectsIndxs,
 		func() fyne.CanvasObject {
 			return widget.NewButton("subject", func() {})
 		},
-		func(i widget.ListItemID, o fyne.CanvasObject) {
-			o.(*widget.Button).SetText(subjects[i].Name)
+		func(i binding.DataItem, o fyne.CanvasObject) {
+			index, _ := i.(binding.Int).Get()
+
+			o.(*widget.Button).SetText(subjects[index].Name)
 			o.(*widget.Button).OnTapped = func() {
-				subject = subjects[i]
+				subject = subjects[index]
 				units, err = db.GetUnits(subject.ID)
 				if err != nil {
 					fmt.Println("GetUnits:", err)
@@ -123,7 +124,16 @@ func Open(myApp fyne.App) {
 		},
 		func(i binding.DataItem, o fyne.CanvasObject) {
 			index, _ := i.(binding.Int).Get()
-			o.(*widget.Button).SetText(units[index].Name)
+
+			// Button name
+			text := ""
+			if units[index].Name != "" {
+				text = fmt.Sprintf("%d: %s", units[index].Num, units[index].Name)
+			} else {
+				text = fmt.Sprintf("Unit %d", units[index].Num)
+			}
+
+			o.(*widget.Button).SetText(text)
 			o.(*widget.Button).OnTapped = func() {
 				mainWindow.Hide()
 				helpers.LaunchEditor(myApp, subject, units[index])
@@ -131,12 +141,7 @@ func Open(myApp fyne.App) {
 			}
 		},
 	)
-
-	// TODO: Form searching
-	input := widget.NewEntry()
-	input.SetPlaceHolder("Search")
-
-	content := container.NewBorder(toolbar, input, nil, nil, container.NewHSplit(listSubjects, listUnits))
+	content := container.NewBorder(toolbar, nil, nil, nil, container.NewHSplit(listSubjects, listUnits))
 	mainWindow.SetContent(content)
 	mainWindow.Show()
 }

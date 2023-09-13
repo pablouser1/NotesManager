@@ -21,6 +21,7 @@ func Open(basePath string) {
 		return
 	}
 
+	// Create tables if database does not exist
 	if _, err := os.Stat(path); err != nil {
 		conn.Exec(files.DB_STRUCT)
 	}
