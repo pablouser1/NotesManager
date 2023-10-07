@@ -11,6 +11,7 @@ import (
 	"github.com/pablouser1/NotesManager/constants/files"
 	"github.com/pablouser1/NotesManager/db"
 	"github.com/pablouser1/NotesManager/helpers"
+	"github.com/pablouser1/NotesManager/helpers/dav"
 	"github.com/pablouser1/NotesManager/windows/home"
 )
 
@@ -42,6 +43,11 @@ func main() {
 			fyne.NewMenuItem("Show", home.Show),
 		)
 		desk.SetSystemTrayMenu(m)
+	}
+
+	// Webdav
+	if dav.IsEnabled(myApp) {
+		dav.NewClient(dav.GetConfig(myApp), docsPath)
 	}
 
 	// Get ready DB
