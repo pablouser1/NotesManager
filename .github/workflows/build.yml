@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libgl1-mesa-dev xorg-dev
+          packages: libgl1-mesa-dev xorg-dev libwayland-dev
           version: 1.0
       - name: Install fyne tools
         run: go install fyne.io/fyne/v2/cmd/fyne@latest
@@ -37,7 +37,7 @@ jobs:
           file: 'FyneApp.toml'
           field: 'Details.Build'
       - name: Build app
-        run: fyne release
+        run: fyne release -tags no_emoji
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
