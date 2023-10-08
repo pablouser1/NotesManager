@@ -3,7 +3,6 @@ package dav
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -51,14 +50,11 @@ func NewClient(webdav models.WebDav, localPath string) error {
 
 func Upload(relPath string) error {
 	if !connected {
-		return errors.New("not connected to the webdav server")
+		return errors.New("not connected to webdav")
 	}
 
 	absLocalPath := filepath.Join(localBase, relPath)
 	absDavPath := filepath.Join(davBase, relPath)
-
-	fmt.Println(absLocalPath)
-	fmt.Println(absDavPath)
 
 	file, err := os.Open(absLocalPath)
 

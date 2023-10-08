@@ -67,10 +67,22 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 	// Sync with WebDav
 	if dav.IsEnabled(myApp) {
 		go func() {
-			fmt.Println(relPath)
+			dav.NewClient(dav.GetConfig(myApp), docsPath)
 			err := dav.Upload(relPath)
-			if err != nil {
-				fmt.Println("Error uploading via WebDAV", err)
+			if err == nil {
+				myApp.SendNotification(
+					fyne.NewNotification(
+						"NotesManager",
+						fmt.Sprintf("%s_%d uploaded successfully", subject.Slug, unit.ID),
+					),
+				)
+			} else {
+				myApp.SendNotification(
+					fyne.NewNotification(
+						"NotesManager",
+						fmt.Sprintf("Error uploading %s-%d: %e", subject.Slug, unit.ID, err),
+					),
+				)
 			}
 		}()
 	}

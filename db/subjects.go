@@ -8,8 +8,8 @@ import (
 )
 
 func AddSubject(name string) (models.Subject, error) {
-	slug := slug.Make(name)
-	res, err := conn.Exec("INSERT INTO subjects (name, slug) VALUES (?, ?)", name, slug)
+	slugName := slug.Make(name)
+	res, err := conn.Exec("INSERT INTO subjects (name, slug) VALUES (?, ?)", name, slugName)
 	if err != nil {
 		return models.Subject{}, fmt.Errorf("AddSubject: %v", err)
 	}
@@ -22,7 +22,7 @@ func AddSubject(name string) (models.Subject, error) {
 	subject := models.Subject{
 		ID:   id,
 		Name: name,
-		Slug: slug,
+		Slug: slugName,
 	}
 
 	return subject, nil
