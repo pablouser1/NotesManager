@@ -73,14 +73,14 @@ func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
 				myApp.SendNotification(
 					fyne.NewNotification(
 						"NotesManager",
-						fmt.Sprintf("%s_%d uploaded successfully", subject.Slug, unit.ID),
+						fmt.Sprintf("%s_%d uploaded successfully", subject.Slug, unit.Num),
 					),
 				)
 			} else {
 				myApp.SendNotification(
 					fyne.NewNotification(
 						"NotesManager",
-						fmt.Sprintf("Error uploading %s-%d: %e", subject.Slug, unit.ID, err),
+						fmt.Sprintf("Error uploading %s-%d: %e", subject.Slug, unit.Num, err),
 					),
 				)
 			}
