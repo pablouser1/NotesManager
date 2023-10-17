@@ -4,5 +4,5 @@ Website = "https://github.com/pablouser1/NotesManager"
   Icon = "Icon.png"
   Name = "NotesManager"
   ID = "es.pablouser1.notesmanager"
-  Version = "1.1.0"
-  Build = 3
+  Version = "1.1.1"
+  Build = 1

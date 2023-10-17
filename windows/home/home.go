@@ -136,8 +136,10 @@ func Open(myApp fyne.App) {
 			o.(*widget.Button).SetText(text)
 			o.(*widget.Button).OnTapped = func() {
 				mainWindow.Hide()
-				helpers.LaunchEditor(myApp, subject, units[index])
-				mainWindow.Show()
+				go func() {
+					helpers.LaunchEditor(myApp, subject, units[index])
+					mainWindow.Show()
+				}()
 			}
 		},
 	)
