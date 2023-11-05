@@ -35,11 +35,25 @@ func getEditor(myApp fyne.App) models.Editor {
 	}
 }
 
-func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit) {
+func buildFilename(unit models.Unit, variant models.Variant, format string) string {
+	filename := strconv.FormatInt(unit.Num, 10)
+
+	if variant != (models.Variant{}) {
+		filename += "-" + variant.Slug
+	}
+
+	filename += format
+
+	return filename
+}
+
+func LaunchEditor(myApp fyne.App, subject models.Subject, unit models.Unit, variant models.Variant) {
 	docsPath := myApp.Preferences().String("docs")
 	editor := getEditor(myApp)
 
-	relPath := filepath.Join(subject.Slug, strconv.FormatInt(unit.Num, 10)+editor.Format)
+	filename := buildFilename(unit, variant, editor.Format)
+
+	relPath := filepath.Join(subject.Slug, filename)
 
 	parentPath := filepath.Join(docsPath, subject.Slug)
 	os.MkdirAll(parentPath, files.DATA_PERMS)

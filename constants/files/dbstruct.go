@@ -17,4 +17,11 @@ CREATE TABLE units (
 	subject_id INTEGER,
 	CONSTRAINT units_FK FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
+
+-- variants definition
+CREATE TABLE variants (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT,
+	slug TEXT
+);
 `

@@ -10,7 +10,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/pablouser1/NotesManager/constants/ui"
 	"github.com/pablouser1/NotesManager/db"
-	"github.com/pablouser1/NotesManager/helpers"
+	"github.com/pablouser1/NotesManager/dialogs/variant"
+	"github.com/pablouser1/NotesManager/helpers/misc"
 	"github.com/pablouser1/NotesManager/models"
 	"github.com/pablouser1/NotesManager/windows/newsub"
 	"github.com/pablouser1/NotesManager/windows/newunit"
@@ -18,15 +19,6 @@ import (
 )
 
 var mainWindow fyne.Window
-
-func getIndexesFromList[T any](arr []T) []int {
-	var res []int
-	for i := range arr {
-		res = append(res, i)
-	}
-
-	return res
-}
 
 func Open(myApp fyne.App) {
 	mainWindow = myApp.NewWindow("Notes Manager")
@@ -59,9 +51,9 @@ func Open(myApp fyne.App) {
 	}
 
 	subjectsIndxs := binding.NewIntList()
-	subjectsIndxs.Set(getIndexesFromList(subjects))
+	subjectsIndxs.Set(misc.GetIndexesFromList(subjects))
 	unitsIndxs := binding.NewIntList()
-	unitsIndxs.Set(getIndexesFromList(units))
+	unitsIndxs.Set(misc.GetIndexesFromList(units))
 
 	// Channels
 	subjectChan := make(chan models.Subject)
@@ -76,7 +68,7 @@ func Open(myApp fyne.App) {
 			// Append if not empty
 			if newSub != (models.Subject{}) {
 				subjects = append(subjects, newSub)
-				subjectsIndxs.Set(getIndexesFromList(subjects))
+				subjectsIndxs.Set(misc.GetIndexesFromList(subjects))
 			}
 		}),
 		// New Unit
@@ -86,7 +78,7 @@ func Open(myApp fyne.App) {
 			// Append if not empty
 			if newUnit != (models.Unit{}) {
 				units = append(units, newUnit)
-				unitsIndxs.Set(getIndexesFromList(units))
+				unitsIndxs.Set(misc.GetIndexesFromList(units))
 			}
 		}),
 		widget.NewToolbarSpacer(),
@@ -112,7 +104,7 @@ func Open(myApp fyne.App) {
 					fmt.Println("GetUnits:", err)
 					return
 				}
-				unitsIndxs.Set(getIndexesFromList(units))
+				unitsIndxs.Set(misc.GetIndexesFromList(units))
 			}
 		},
 	)
@@ -135,14 +127,12 @@ func Open(myApp fyne.App) {
 
 			o.(*widget.Button).SetText(text)
 			o.(*widget.Button).OnTapped = func() {
-				mainWindow.Hide()
-				go func() {
-					helpers.LaunchEditor(myApp, subject, units[index])
-					mainWindow.Show()
-				}()
+				variantDialog := variant.NewVariantDialog(myApp, mainWindow, subject, units[index])
+				variantDialog.Show()
 			}
 		},
 	)
+
 	content := container.NewBorder(toolbar, nil, nil, nil, container.NewHSplit(listSubjects, listUnits))
 	mainWindow.SetContent(content)
 	mainWindow.Show()
