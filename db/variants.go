@@ -4,6 +4,12 @@ import (
 	"github.com/pablouser1/NotesManager/models"
 )
 
+var defaultVariant = models.Variant{
+	ID:   -1,
+	Name: "Default",
+	Slug: "default",
+}
+
 func GetVariants() ([]models.Variant, error) {
 	rows, err := conn.Query("SELECT id, name, slug FROM variants ORDER BY slug ASC")
 	if err != nil {
@@ -13,11 +19,7 @@ func GetVariants() ([]models.Variant, error) {
 	var variants []models.Variant
 
 	// Default option
-	variants = append(variants, models.Variant{
-		ID:   -1,
-		Name: "Default",
-		Slug: "default",
-	})
+	variants = append(variants, defaultVariant)
 
 	for rows.Next() {
 		var subject models.Subject
@@ -34,13 +36,16 @@ func GetVariants() ([]models.Variant, error) {
 }
 
 func GetVariantByName(name string) (models.Variant, error) {
+	if defaultVariant.Name == name {
+		return defaultVariant, nil
+	}
+
 	stmt, err := conn.Prepare("SELECT id, name, slug FROM variants WHERE name=?")
 	if err != nil {
 		return models.Variant{}, err
 	}
 
 	var variant models.Variant
-
 	err = stmt.QueryRow(name).Scan(&variant.ID, &variant.Name, &variant.Slug)
 
 	if err != nil {

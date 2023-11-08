@@ -30,6 +30,10 @@ func getVariantsName() []string {
 }
 
 func runEditor(myApp fyne.App, subject models.Subject, unit models.Unit, variant models.Variant, mainWindow fyne.Window) {
+	if variant.ID == -1 {
+		variant = models.Variant{}
+	}
+
 	mainWindow.Hide()
 	go func() {
 		helpers.LaunchEditor(myApp, subject, unit, variant)
