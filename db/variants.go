@@ -16,6 +16,8 @@ func GetVariants() ([]models.Variant, error) {
 		return nil, err
 	}
 
+	defer rows.Close()
+
 	var variants []models.Variant
 
 	// Default option

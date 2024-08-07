@@ -33,6 +33,8 @@ func GetUnits(id int64) ([]models.Unit, error) {
 		return nil, err
 	}
 
+	defer rows.Close()
+
 	var units []models.Unit
 
 	for rows.Next() {

@@ -27,9 +27,6 @@ func Open(myApp fyne.App) {
 		mainWindow.Hide()
 	})
 
-	// Picked subject
-	var subject models.Subject
-
 	// Get subjects
 	subjects, err := db.GetSubjects()
 	if err != nil {
@@ -38,10 +35,7 @@ func Open(myApp fyne.App) {
 	}
 
 	// Set default selected subject
-	subject = models.Subject{}
-	if len(subjects) > 0 {
-		subject = subjects[0]
-	}
+	subject := getDefaultSubject(subjects)
 
 	// Get default units
 	units, err := db.GetUnits(subject.ID)
@@ -140,4 +134,13 @@ func Open(myApp fyne.App) {
 
 func Show() {
 	mainWindow.Show()
+}
+
+func getDefaultSubject(sbjs []models.Subject) models.Subject {
+	subject := models.Subject{}
+	if len(sbjs) > 0 {
+		subject = sbjs[0]
+	}
+
+	return subject
 }

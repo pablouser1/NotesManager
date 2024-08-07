@@ -34,6 +34,8 @@ func GetSubjects() ([]models.Subject, error) {
 		return nil, err
 	}
 
+	defer rows.Close()
+
 	var subjects []models.Subject
 
 	for rows.Next() {
